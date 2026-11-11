@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { RegistrationCart, CartItem, TicketConfirmation } from '@/types';
-import { Trash2, ShoppingBag, ShieldCheck, User, Mail, Award, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Trash2, ShoppingBag, User, CheckCircle2, AlertCircle } from 'lucide-react';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 
 interface CartDrawerProps {
@@ -87,9 +87,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     setIsProcessing(true);
     setCheckoutError(null);
     try {
-      // Create order first
       const orderId = await handleCreateOrder();
-      // Simulate capture
       await handleApprove({ orderID: orderId });
     } catch (err: any) {
       setCheckoutError(err.message);
@@ -99,12 +97,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   if (cart.items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center rounded-2xl border border-slate-800 bg-slate-900/40">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 text-slate-500 mb-3">
-          <ShoppingBag className="h-7 w-7" />
+      <div className="flex flex-col items-center justify-center p-12 text-center rounded-card border border-[#E1E7EB] bg-white shadow-paypal-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F5F7FA] text-[#6C7378] mb-3 border border-[#E1E7EB]">
+          <ShoppingBag className="h-6 w-6" strokeWidth={1.5} />
         </div>
-        <h3 className="text-base font-semibold text-white">Your Cart is Empty</h3>
-        <p className="mt-1 text-xs text-slate-400 max-w-xs">
+        <h3 className="text-base font-semibold text-[#2C2E2F]">Your Cart is Empty</h3>
+        <p className="mt-1 text-xs text-[#6C7378] max-w-xs">
           Ask the AI concierge: "Find me two AI workshops this weekend, with a total ticket budget of $40." or add tickets manually!
         </p>
       </div>
@@ -112,159 +110,167 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   }
 
   return (
-    <div className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div className="flex items-center space-x-2">
-          <ShoppingBag className="h-4 w-4 text-indigo-400" />
-          <h3 className="text-sm font-bold text-white">Registration Cart ({cart.items.length})</h3>
+    <div className="space-y-6 rounded-card border border-[#E1E7EB] bg-white p-6 shadow-paypal">
+      {/* 1. Order Summary Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between border-b border-[#E1E7EB] pb-3">
+          <div className="flex items-center space-x-2">
+            <h3 className="text-sm font-semibold text-[#2C2E2F]">Order Summary ({cart.items.length})</h3>
+          </div>
+          <button
+            onClick={onClearCart}
+            className="text-xs text-[#6C7378] hover:text-[#C72C2C] transition-colors"
+          >
+            Clear
+          </button>
         </div>
-        <button
-          onClick={onClearCart}
-          className="text-xs text-slate-400 hover:text-red-400 transition-colors"
-        >
-          Clear
-        </button>
-      </div>
 
-      {/* Budget Goal Tracker */}
-      {targetBudgetUsd && (
-        <div className="rounded-xl border border-indigo-500/30 bg-indigo-950/20 p-3 text-xs">
-          <div className="flex items-center justify-between mb-1.5 font-medium">
-            <span className="text-indigo-300">Stated Budget Target:</span>
-            <span className="font-bold text-white">${targetBudgetUsd}</span>
-          </div>
-          <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-            <div
-              className={`h-2 rounded-full ${
-                Number(totalAmountUsd) <= Number(targetBudgetUsd)
-                  ? 'bg-emerald-500'
-                  : 'bg-amber-500'
-              }`}
-              style={{
-                width: `${Math.min(
-                  100,
-                  (Number(totalAmountUsd) / Number(targetBudgetUsd)) * 100
-                )}%`,
-              }}
-            />
-          </div>
-          <div className="mt-1.5 flex items-center justify-between text-[11px] text-slate-400">
-            <span>Cart Total: ${totalAmountUsd}</span>
-            {Number(totalAmountUsd) <= Number(targetBudgetUsd) ? (
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3" /> Within budget limit
-              </span>
-            ) : (
-              <span className="text-amber-400 font-semibold">Exceeds budget target</span>
+        {/* Budget Match Tracker */}
+        {targetBudgetUsd && (
+          <div className="rounded-lg border border-[#0B7A3E]/20 bg-[#E8F5EC] p-3 text-xs text-[#0B7A3E]">
+            <div className="flex items-center justify-between mb-1.5 font-medium">
+              <span className="text-[#0B7A3E] font-semibold">Stated Budget Target:</span>
+              <span className="font-bold text-[#2C2E2F]">${targetBudgetUsd}</span>
+            </div>
+            <div className="w-full bg-[#CBD2D6]/40 rounded-full h-1.5 overflow-hidden">
+              <div
+                className={`h-1.5 rounded-full ${
+                  Number(totalAmountUsd) <= Number(targetBudgetUsd)
+                    ? 'bg-[#0B7A3E]'
+                    : 'bg-[#8A5A00]'
+                }`}
+                style={{
+                  width: `${Math.min(
+                    100,
+                    (Number(totalAmountUsd) / Number(targetBudgetUsd)) * 100
+                  )}%`,
+                }}
+              />
+            </div>
+            <div className="mt-1.5 flex items-center justify-between text-[11px]">
+              <span className="text-[#6C7378]">Cart Total: ${totalAmountUsd}</span>
+              {Number(totalAmountUsd) <= Number(targetBudgetUsd) ? (
+                <span className="text-[#0B7A3E] font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3" strokeWidth={1.5} /> Within budget limit
+                </span>
+              ) : (
+                <span className="text-[#8A5A00] font-semibold">Exceeds budget target</span>
+              )}
+            </div>
+            {cart.notes && (
+              <p className="mt-2 text-[11px] text-[#2C2E2F] italic border-t border-[#0B7A3E]/10 pt-1.5">
+                "{cart.notes}"
+              </p>
             )}
           </div>
-          {cart.notes && (
-            <p className="mt-2 text-[11px] text-indigo-200/90 italic bg-indigo-900/30 p-2 rounded-lg">
-              "{cart.notes}"
-            </p>
-          )}
-        </div>
-      )}
+        )}
 
-      {/* Items List */}
-      <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
-        {cart.items.map((item, idx) => (
-          <div
-            key={`${item.event.id}-${item.tier.id}-${idx}`}
-            className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 p-3"
-          >
-            <div className="space-y-1 pr-2">
-              <h4 className="text-xs font-semibold text-white line-clamp-1">
-                {item.event.title}
-              </h4>
-              <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                <span className="rounded bg-indigo-500/10 px-1.5 py-0.5 text-indigo-300">
-                  {item.tier.name}
+        {/* Line Items List */}
+        <div className="space-y-3 divide-y divide-[#E1E7EB]">
+          {cart.items.map((item, idx) => (
+            <div
+              key={`${item.event.id}-${item.tier.id}-${idx}`}
+              className="pt-3 first:pt-0 flex items-center justify-between gap-4"
+            >
+              <div className="space-y-0.5 flex-1 min-w-0">
+                <h4 className="text-xs font-semibold text-[#2C2E2F] truncate">
+                  {item.event.title}
+                </h4>
+                <div className="flex items-center gap-2 text-[11px] text-[#6C7378]">
+                  <span className="rounded bg-[#F5F7FA] px-1.5 py-0.5 border border-[#E1E7EB]">
+                    {item.tier.name}
+                  </span>
+                  <span>${(item.tier.price_cents / 100).toFixed(2)} each</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3 shrink-0">
+                <div className="flex items-center rounded-lg border border-[#CBD2D6] bg-white px-2 py-0.5 text-xs">
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    onClick={() => onUpdateQuantity(item.event.id, item.tier.id, -1)}
+                    className="px-1 text-[#6C7378] hover:text-[#2C2E2F]"
+                  >
+                    -
+                  </button>
+                  <span className="px-2 font-semibold text-[#2C2E2F]">{item.quantity}</span>
+                  <button
+                    type="button"
+                    aria-label="Increase quantity"
+                    onClick={() => onUpdateQuantity(item.event.id, item.tier.id, 1)}
+                    className="px-1 text-[#6C7378] hover:text-[#2C2E2F]"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <span className="font-semibold text-xs text-[#2C2E2F] min-w-[50px] text-right">
+                  ${((item.tier.price_cents * (item.quantity || 1)) / 100).toFixed(2)}
                 </span>
-                <span>${(item.tier.price_cents / 100).toFixed(2)} each</span>
-              </div>
-            </div>
 
-            <div className="flex items-center space-x-2 shrink-0">
-              <div className="flex items-center rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs">
                 <button
                   type="button"
-                  onClick={() => onUpdateQuantity(item.event.id, item.tier.id, -1)}
-                  className="px-1 text-slate-400 hover:text-white"
+                  aria-label="Remove item"
+                  onClick={() => onRemoveItem(item.event.id, item.tier.id)}
+                  className="text-[#6C7378] hover:text-[#C72C2C] transition-colors p-1"
                 >
-                  -
-                </button>
-                <span className="px-1.5 font-bold text-white">{item.quantity}</span>
-                <button
-                  type="button"
-                  onClick={() => onUpdateQuantity(item.event.id, item.tier.id, 1)}
-                  className="px-1 text-slate-400 hover:text-white"
-                >
-                  +
+                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
                 </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => onRemoveItem(item.event.id, item.tier.id)}
-                className="text-slate-500 hover:text-red-400 transition-colors p-1"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* Student Details Form */}
-      <div className="space-y-2.5 rounded-xl border border-slate-800 bg-slate-950/40 p-3 text-xs">
-        <h4 className="font-semibold text-slate-300 flex items-center gap-1.5">
-          <User className="h-3.5 w-3.5 text-indigo-400" />
+      {/* 2. Attendee Details Section */}
+      <div className="space-y-3 border-t border-[#E1E7EB] pt-4">
+        <h4 className="text-xs font-semibold text-[#2C2E2F] flex items-center gap-1.5">
+          <User className="h-3.5 w-3.5 text-[#0070BA]" strokeWidth={1.5} />
           <span>Student Attendee Details</span>
         </h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
           <div>
-            <label className="text-[10px] text-slate-400">Full Name</label>
+            <label className="block text-[11px] font-medium text-[#6C7378] mb-1">Full Name</label>
             <input
               type="text"
               value={studentName}
               onChange={(e) => setStudentName(e.target.value)}
-              className="w-full rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-input border border-[#CBD2D6] bg-white px-3 py-2 text-xs text-[#2C2E2F] min-h-[44px] focus:border-[#0070BA] focus:outline-none focus:ring-1 focus:ring-[#0070BA]"
             />
           </div>
           <div>
-            <label className="text-[10px] text-slate-400">University Email</label>
+            <label className="block text-[11px] font-medium text-[#6C7378] mb-1">University Email</label>
             <input
               type="email"
               value={studentEmail}
               onChange={(e) => setStudentEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-input border border-[#CBD2D6] bg-white px-3 py-2 text-xs text-[#2C2E2F] min-h-[44px] focus:border-[#0070BA] focus:outline-none focus:ring-1 focus:ring-[#0070BA]"
             />
           </div>
         </div>
       </div>
 
-      {/* Total & PayPal Checkout */}
-      <div className="space-y-3 border-t border-slate-800 pt-3">
+      {/* 3. Total & Payment Section */}
+      <div className="space-y-4 border-t border-[#E1E7EB] pt-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold text-slate-300">Total Registration Amount:</span>
-          <span className="text-lg font-bold text-emerald-400 font-mono">
+          <span className="font-medium text-[#6C7378]">Total Registration Amount:</span>
+          <span className="text-lg font-bold text-[#2C2E2F]">
             ${totalAmountUsd} USD
           </span>
         </div>
 
         {checkoutError && (
-          <div className="rounded-xl border border-red-500/30 bg-red-950/30 p-2.5 text-xs text-red-300 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+          <div className="rounded-lg border border-[#C72C2C]/20 bg-[#FDECEC] p-3 text-xs text-[#C72C2C] flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-[#C72C2C]" strokeWidth={1.5} />
             <span>{checkoutError}</span>
           </div>
         )}
 
         {/* PayPal SDK Buttons */}
-        <div className="relative">
+        <div className="relative pt-1">
           {isProcessing && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-slate-950/80 backdrop-blur-sm text-xs font-semibold text-indigo-300">
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/85 text-xs font-semibold text-[#0070BA]">
               Processing Payment with PayPal Sandbox...
             </div>
           )}
@@ -274,9 +280,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               style={{
                 layout: 'vertical',
                 color: 'gold',
-                shape: 'rect',
+                shape: 'pill',
                 label: 'pay',
-                height: 40,
+                height: 44,
               }}
               createOrder={async () => {
                 return await handleCreateOrder();
@@ -291,12 +297,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             />
           </div>
 
-          <div className="mt-2 text-center">
+          <div className="mt-3 text-center space-y-2">
+            <p className="text-[11px] text-[#6C7378]">
+              Powered by PayPal
+            </p>
             <button
               type="button"
               onClick={handleDirectDemoCheckout}
               disabled={isProcessing}
-              className="w-full text-center text-[11px] text-slate-400 hover:text-indigo-300 transition-colors py-1 underline"
+              className="text-center text-xs text-[#6C7378] hover:text-[#0070BA] transition-colors underline"
             >
               Or complete instant sandbox test checkout (1-click demo)
             </button>

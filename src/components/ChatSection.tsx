@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, Bot, User, CheckCircle2, ArrowRight, Loader2, Calendar, MapPin } from 'lucide-react';
+import { Send, Bot, User, CheckCircle2, ArrowRight, Loader2, Calendar } from 'lucide-react';
 import { ChatMessage, Event, RegistrationCart, TicketTier } from '@/types';
 
 interface ChatSectionProps {
@@ -26,7 +26,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
       id: 'welcome-msg',
       role: 'assistant',
       content:
-        '👋 Hey! I am **EventMate**, your AI event concierge and budget registration agent. Tell me what kind of events you are looking for, your schedule, or your target budget!',
+        'Hey! I am EventMate, your AI event concierge and budget registration agent. Tell me what kind of events you are looking for, your schedule, or your target budget.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -92,7 +92,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
         {
           id: `error-${Date.now()}`,
           role: 'assistant',
-          content: `⚠️ Sorry, an error occurred: ${err.message}`,
+          content: `Sorry, an error occurred: ${err.message}`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -102,41 +102,39 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-[750px] rounded-3xl border border-slate-800 bg-slate-900/70 shadow-2xl overflow-hidden backdrop-blur-md">
+    <div className="flex flex-col h-[750px] rounded-card border border-[#E1E7EB] bg-white shadow-paypal overflow-hidden">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-950/60 px-5 py-4">
+      <div className="flex items-center justify-between border-b border-[#E1E7EB] bg-white px-5 py-3.5">
         <div className="flex items-center space-x-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
-            <Bot className="h-5 w-5" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F5F7FA] text-[#003087] border border-[#E1E7EB]">
+            <Bot className="h-4 w-4" strokeWidth={1.5} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-white">EventMate AI Concierge</h2>
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <h2 className="text-sm font-semibold text-[#2C2E2F]">EventMate AI Concierge</h2>
             </div>
-            <p className="text-[11px] text-slate-400">
-              GPT-6.1 · University Event Reasoning & Registration Agent
+            <p className="text-[11px] text-[#6C7378]">
+              University Event Reasoning & Registration Agent
             </p>
           </div>
         </div>
 
-        <span className="rounded-full bg-indigo-500/10 px-2.5 py-1 text-[11px] font-semibold text-indigo-400 border border-indigo-500/20">
+        <span className="rounded-full bg-[#F5F7FA] px-2.5 py-0.5 text-[11px] font-medium text-[#6C7378] border border-[#E1E7EB]">
           Demo Active
         </span>
       </div>
 
       {/* Suggested Quick Prompts */}
-      <div className="border-b border-slate-800/80 bg-slate-950/40 px-4 py-2.5 overflow-x-auto">
+      <div className="border-b border-[#E1E7EB] bg-[#F5F7FA] px-4 py-2.5 overflow-x-auto">
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-[10px] uppercase font-bold text-slate-500 shrink-0">Try:</span>
+          <span className="text-[11px] font-medium text-[#6C7378] shrink-0">Suggestions:</span>
           {DEFAULT_SUGGESTIONS.map((suggestion, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleSend(suggestion)}
-              className="rounded-full bg-slate-800/80 px-3 py-1 text-[11px] text-slate-300 hover:bg-indigo-600 hover:text-white transition-all whitespace-nowrap border border-slate-700/60"
+              className="rounded-full bg-white px-3 py-1.5 text-xs text-[#2C2E2F] hover:bg-[#F5F7FA] hover:border-[#0070BA] transition-colors whitespace-nowrap border border-[#CBD2D6] shadow-paypal-sm font-normal"
             >
-              {idx === 0 ? '⭐ ' : ''}
               {suggestion}
             </button>
           ))}
@@ -154,41 +152,45 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
           >
             {/* Avatar */}
             <div
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                 msg.role === 'user'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-800 text-indigo-400 border border-slate-700'
+                  ? 'bg-[#0070BA] text-white'
+                  : 'bg-[#F5F7FA] text-[#003087] border border-[#E1E7EB]'
               }`}
             >
-              {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+              {msg.role === 'user' ? (
+                <User className="h-3.5 w-3.5" strokeWidth={1.5} />
+              ) : (
+                <Bot className="h-3.5 w-3.5" strokeWidth={1.5} />
+              )}
             </div>
 
             {/* Bubble */}
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs leading-relaxed space-y-3 ${
+              className={`max-w-[85%] rounded-card px-4 py-3 text-xs leading-relaxed space-y-3 ${
                 msg.role === 'user'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-800/90 text-slate-200 border border-slate-700/70 shadow-md'
+                  ? 'bg-[#0070BA] text-white'
+                  : 'bg-[#F5F7FA] text-[#2C2E2F] border border-[#E1E7EB]'
               }`}
             >
               {/* Message text */}
               <div className="whitespace-pre-wrap">{msg.content}</div>
 
-              {/* Constraint Reasoning Summary Pill */}
+              {/* Constraint Reasoning Summary Pill (Calm Success Match) */}
               {msg.reasoningSummary && (
-                <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/30 p-2.5 text-[11px] text-emerald-200">
-                  <div className="font-bold flex items-center gap-1.5 text-emerald-400 mb-0.5">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
+                <div className="rounded-lg border border-[#0B7A3E]/20 bg-[#E8F5EC] p-2.5 text-xs text-[#0B7A3E]">
+                  <div className="font-semibold flex items-center gap-1.5 mb-0.5">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[#0B7A3E]" strokeWidth={1.5} />
                     <span>Budget & Constraint Match</span>
                   </div>
-                  <span>{msg.reasoningSummary}</span>
+                  <span className="text-[#0B7A3E]">{msg.reasoningSummary}</span>
                 </div>
               )}
 
               {/* Inline Event Recommendation Cards */}
               {msg.recommendedEvents && msg.recommendedEvents.length > 0 && (
-                <div className="mt-2 space-y-2 pt-2 border-t border-slate-700/50">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="mt-2 space-y-2 pt-2 border-t border-[#E1E7EB]">
+                  <span className="text-[11px] font-semibold text-[#6C7378]">
                     Recommended Events Matching Your Criteria:
                   </span>
                   <div className="grid grid-cols-1 gap-2">
@@ -199,16 +201,16 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
                       return (
                         <div
                           key={ev.id}
-                          className="flex items-center justify-between rounded-xl bg-slate-950/60 p-3 border border-slate-700/80"
+                          className="flex items-center justify-between rounded-lg bg-white p-3 border border-[#E1E7EB] shadow-paypal-sm"
                         >
                           <div className="space-y-1 pr-2">
-                            <span className="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[10px] font-bold text-indigo-300">
+                            <span className="rounded bg-[#F5F7FA] px-1.5 py-0.5 text-[10px] font-medium text-[#6C7378] border border-[#E1E7EB]">
                               {ev.category}
                             </span>
-                            <h4 className="font-semibold text-white text-xs">{ev.title}</h4>
-                            <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                            <h4 className="font-semibold text-[#2C2E2F] text-xs">{ev.title}</h4>
+                            <div className="flex items-center gap-2 text-[11px] text-[#6C7378]">
                               <span className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3 text-indigo-400" />
+                                <Calendar className="h-3 w-3 text-[#6C7378]" strokeWidth={1.5} />
                                 {new Date(ev.starts_at).toLocaleDateString([], {
                                   weekday: 'short',
                                   month: 'short',
@@ -216,7 +218,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
                                 })}
                               </span>
                               <span>·</span>
-                              <span className="text-emerald-400 font-bold">
+                              <span className="text-[#0B7A3E] font-semibold">
                                 ${(Number(studentTier?.price_cents || 0) / 100).toFixed(2)}{' '}
                                 {studentTier?.name}
                               </span>
@@ -227,7 +229,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
                             <button
                               type="button"
                               onClick={() => onAddToCart(ev, studentTier)}
-                              className="shrink-0 rounded-lg bg-indigo-600/80 hover:bg-indigo-600 px-2.5 py-1.5 text-[11px] font-medium text-white transition-all"
+                              className="shrink-0 rounded-full bg-[#0070BA] hover:bg-[#005EA6] px-3 py-1.5 text-xs font-semibold text-white transition-colors"
                             >
                               Add Ticket
                             </button>
@@ -245,23 +247,25 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
                   <button
                     type="button"
                     onClick={onViewCart}
-                    className="flex items-center space-x-1.5 text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                    className="flex items-center space-x-1.5 text-xs font-semibold text-[#0070BA] hover:text-[#005EA6] transition-colors"
                   >
                     <span>View Registration Cart & Checkout with PayPal</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.5} />
                   </button>
                 </div>
               )}
 
-              <div className="text-[10px] text-slate-400/80 text-right">{msg.timestamp}</div>
+              <div className={`text-[10px] ${msg.role === 'user' ? 'text-white/80' : 'text-[#6C7378]'} text-right`}>
+                {msg.timestamp}
+              </div>
             </div>
           </div>
         ))}
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="flex items-center space-x-3 text-xs text-indigo-300 bg-slate-800/60 p-3 rounded-2xl max-w-sm border border-slate-700/60">
-            <Loader2 className="h-4 w-4 animate-spin text-indigo-400" />
+          <div className="flex items-center space-x-2.5 text-xs text-[#6C7378] bg-[#F5F7FA] p-3 rounded-lg max-w-sm border border-[#E1E7EB]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#0070BA]" strokeWidth={1.5} />
             <span>Agent reasoning over university events, pricing & budget constraints...</span>
           </div>
         )}
@@ -275,7 +279,7 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
           e.preventDefault();
           handleSend();
         }}
-        className="border-t border-slate-800 bg-slate-950/80 p-3 sm:p-4"
+        className="border-t border-[#E1E7EB] bg-white p-3 sm:p-4"
       >
         <div className="relative flex items-center">
           <input
@@ -283,14 +287,15 @@ export const ChatSection: React.FC<ChatSectionProps> = ({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. Find me two AI workshops this weekend, with a total ticket budget of $40."
-            className="w-full rounded-2xl border border-slate-700 bg-slate-900/90 pl-4 pr-12 py-3 text-xs text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-full border border-[#CBD2D6] bg-white pl-4 pr-12 py-2.5 text-xs text-[#2C2E2F] placeholder-[#6C7378] focus:border-[#0070BA] focus:outline-none focus:ring-1 focus:ring-[#0070BA] min-h-[44px]"
           />
           <button
             type="submit"
+            aria-label="Send message"
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-40 transition-all shadow-md shadow-indigo-600/30"
+            className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-[#0070BA] text-white hover:bg-[#005EA6] disabled:opacity-40 transition-colors"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4" strokeWidth={1.5} />
           </button>
         </div>
       </form>
