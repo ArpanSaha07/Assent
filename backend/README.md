@@ -12,3 +12,4 @@ frontend/src/app/api/
 ```
 
 If a dedicated backend server is added in the future (e.g., Express, FastAPI), it should live here.
+
